@@ -38,11 +38,13 @@ class Server:
             }
         return self.__indexed_dataset
 
-    def get_hyper_index(self, index: int = None, page_size: int = 10) -> Dict[str, Any]:
+    def get_hyper_index(
+            self, index: int = None, page_size: int = 10) -> Dict[str, Any]:
         """
-        Return a dictionary with pagination information, resilient to deletions.
+        Return a dictionary with pagination information, resilient to deletion
         """
-        assert index is not None and 0 <= index < len(self.indexed_dataset()), "Index must be within valid range"
+        assert index is not None and 0 <= index < len(self.indexed_dataset())
+        "Index must be within valid range"
         assert page_size > 0, "Page size must be a positive integer"
 
         indexed_dataset = self.indexed_dataset()
@@ -58,5 +60,6 @@ class Server:
             'index': index,
             'data': data,
             'page_size': page_size,
-            'next_index': next_index if next_index < len(indexed_dataset) else None
+            'next_index': next_index if next_index < len(indexed_dataset) else
+            None
         }
