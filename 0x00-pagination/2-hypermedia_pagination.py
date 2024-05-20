@@ -40,7 +40,7 @@ class Server:
     def get_page(self, page: int = 1, page_size: int = 10) -> List[List]:
         assert isinstance(page, int) and page > 0
         "Page must be a positive integer"
-        assert isinstance(page_size, int) and page_size > 0
+        assert isinstance(page_size, int) and page > 0
         "Page size must be a positive integer"
 
         dataset = self.dataset()
@@ -58,7 +58,7 @@ class Server:
         prev_page: number of the previous page, None if no previous page
         total_pages: the total number of pages in the dataset as an integer
         Make sure to reuse get_page in your implementation.
-        
+
         You can use the math module if necessary.
         """
 
