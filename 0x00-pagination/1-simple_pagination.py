@@ -2,10 +2,10 @@
 """Simple helper function."""
 import csv
 import math
-from typing import List
+from typing import List, Tuple
 
 
-def index_range(page, page_size):
+def index_range(page: int, page_size: int) -> Tuple[int, int]:
     """
     Returns a tuple of size two containing a start index and an end index
     corresponding to the range of indexes to return in a list for those
@@ -44,10 +44,9 @@ class Server:
         "Page size must be a positive integer"
 
         dataset = self.dataset()
-        index_range = math.ceil(len(dataset) / page_size)
-        if page > index_range:
+        start_index, end_index = index_range(page, page_size)
+
+        if start_index >= len(dataset):
             return []
 
-        start_index = (page - 1) * page_size
-        end_index = start_index + page_size
         return dataset[start_index:end_index]
