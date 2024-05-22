@@ -17,40 +17,55 @@ class LFUCache(BaseCaching):
     def put(self, key, item):
         """ Add an item in the cache
         If key or item is None, do nothing
-        If number of items in self.cache_data is higher BaseCaching.MAX_ITEMS:
-        you must discard the least frequency used item (LFU algorithm)
-        if find more than 1 item to discard, must use the LRU algorithm to
-        discard only the least recently used
-        you must print DISCARD: with the key discarded, following by new line
+        If the number of items in self.cache_data exceeds MAX_ITEMS,
+        discard the least frequently used item (LFU algorithm)
+        If there's a tie, use LRU algorithm to discard the least recently used
         """
         if key is None or item is None:
             return
 
         if key in self.cache_data:
-            self.cache_order.remove(key)
-            self.usage_count[key] += 1
-        elif len(self.cache_data) >= BaseCaching.MAX_ITEMS:
-            least_used_key = min(self.usage_count, key=self.usage_count.get)
-            if self.usage_count[key] == self.usage_count[least_used_key]:
-                least_used_key = self.cache_order.pop(0)
-            else:
-                self.cache_order.remove(least_used_key)
-            del self.cache_data[least_used_key]
-            del self.usage_count[least_used_key]
-            print(f"DISCARD: {least_used_key}")
-
-        self.cache_data[key] = item
-        self.cache_order.append(key)
-        self.usage_count[key] = 1
+            self.cache_data[key] = item
+            self.frequency[key] += 1
+            self._update_usage_order(key)
+        else:
+            if len(self.cache_data) >= BaseCaching.MAX_ITEMS:
+                self._evict()
+            self.cache_data[key] = item
+            self.frequency[key] = 1
+            self.usage_order.append(key)
 
     def get(self, key):
         """ Get an item by key
-        If key is None or if key doesn’t exist self.cache_data, return None
+        If key is None or doesn't exist, return None
         """
         if key is None or key not in self.cache_data:
             return None
-
-        self.cache_order.remove(key)
-        self.cache_order.append(key)
-        self.usage_count[key] += 1
+        
+        self.frequency[key] += 1
+        self._update_usage_order(key)
+        
         return self.cache_data[key]
+
+    def _update_usage_order(self, key):
+        """ Update the usage order of the cache
+        """
+        if key in self.usage_order:
+            self.usage_order.remove(key)
+        self.usage_order.append(key)
+
+    def _evict(self):
+        """ Evict the least frequently used item, using LRU to break ties
+        """
+        min_freq = min(self.frequency.values())
+        candidates = [k for k, v in self.frequency.items() if v == min_freq]
+        lru_key = None
+        for key in self.usage_order:
+            if key in candidates:
+                lru_key = key
+                break
+        if lru_key:
+            del self.cache_data[lru_key]
+            del self.frequency[lru_key]
+            self.usage_order.remove(lru_key)
+            print(f"DISCARD: {lru_key}")
