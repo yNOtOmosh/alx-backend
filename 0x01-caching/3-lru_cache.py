@@ -14,9 +14,9 @@ class LRUCache(BaseCaching):
     def put(self, key, item):
         """Add an item in the cache
         If key or item is None, do nothing
-        If the number of items in self.cache_data is higher that BaseCaching.MAX_ITEMS:
-        you must discard the least recently used item (LRU algorithm)
-        you must print DISCARD: with the key discarded and following by a new line
+        If the number items self.cache_data higher BaseCaching.MAX_ITEMS:
+        must discard the least recently used item (LRU algorithm)
+        must print DISCARD: with key discarded and following by a new line
         """
         if key is None or item is None:
             return
