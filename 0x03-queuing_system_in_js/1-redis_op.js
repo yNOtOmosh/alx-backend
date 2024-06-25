@@ -1,5 +1,5 @@
 #!/usr/bin/yarn dev
-import { createClient } from 'redis';
+import { createClient, print } from 'redis';
 
 const client = createClient();
 
@@ -10,3 +10,17 @@ client.on('error', (err) => {
 client.on('connect', () => {
   console.log('Redis client connected to the server');
 });
+
+const  setNewSchool = (schoolName, value) => {
+  client.set(schoolName, value, print);
+};
+
+const displaySchoolValue = (schoolName) => {
+    client.GET(schoolName, (_err, reply) => {
+      console.log(reply);
+    });
+  };
+  
+  displaySchoolValue('Holberton');
+  setNewSchool('HolbertonSanFrancisco', '100');
+  displaySchoolValue('HolbertonSanFrancisco');
