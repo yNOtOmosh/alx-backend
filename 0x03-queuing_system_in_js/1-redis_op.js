@@ -16,11 +16,11 @@ const  setNewSchool = (schoolName, value) => {
 };
 
 const displaySchoolValue = (schoolName) => {
-    client.GET(schoolName, (_err, reply) => {
-      console.log(reply);
-    });
-  };
+  client.GET(schoolName, (_err, reply) => {
+    console.log(reply);
+  });
+};
   
-  displaySchoolValue('Holberton');
-  setNewSchool('HolbertonSanFrancisco', '100');
-  displaySchoolValue('HolbertonSanFrancisco');
+displaySchoolValue('Holberton');
+setNewSchool('HolbertonSanFrancisco', '100');
+displaySchoolValue('HolbertonSanFrancisco');
