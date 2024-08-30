@@ -2,25 +2,21 @@
 import { createClient } from 'redis';
 
 const client = redis.createClient();
+const EXIT_MSG = 'KILL_SERVER';
+
+client.on('error', (err) => {
+  console.log('Redis client not connected to the server:', err.toString());
+});
 
 client.on('connect', () => {
   console.log('Redis client connected to the server');
 });
 
-client.on('error', (err) => {
-  console.log(`Redis client not connected to the server: ${err.message}`);
-});
-
 client.subscribe('holberton school channel');
 
-client.on('message', (channel, message) => {
-  if (channel === 'holberton school channel') {
-    console.log(message);
-  }
-});
-
-client.on('message', (channel, message) => {
-  if (message === 'KILL_SERVER') {
+client.on('message', (_err, msg) => {
+  console.log(msg);
+  if (msg === EXIT_MSG) {
     client.unsubscribe();
     client.quit();
   }
