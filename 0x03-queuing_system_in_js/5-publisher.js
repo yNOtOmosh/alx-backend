@@ -1,7 +1,7 @@
 #!usr/bin/yarn dev
 import redis from 'redis';
 
-const publisher = redis.createClient();
+const client = redis.createClient();
 
 client.on('error', (err) => {
   console.log('Redis client not connected to the server:', err.toString());
